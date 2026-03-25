@@ -1,7 +1,7 @@
 #include <DHT.h>
 #include <LiquidCrystal_I2C.h>
 
-// --- CZUJNIKI I PINS ---
+// --- SENSORS AND PINS ---
 #define DHTPIN 2
 #define DHTTYPE DHT11
 #define LM35_PIN A3
@@ -100,19 +100,19 @@ void loop() {
     if (soilPercent > 100.0) soilPercent = 100.0;
     if (soilPercent < 0.0) soilPercent = 0.0;
 
-    // Sterowanie pompą na podstawie wilgotności i poziomu wody
+    // Pump control based on soil moisture and water level
     if (soilPercent < 60.0 && waterLevel >= 630) {
-      digitalWrite(PUMP_PIN, LOW);  // Pompa włączona (LOW = ON)
+      digitalWrite(PUMP_PIN, LOW);  // Pump ON (LOW = ON)
     } else {
-      digitalWrite(PUMP_PIN, HIGH); // Pompa wyłączona (HIGH = OFF)
+      digitalWrite(PUMP_PIN, HIGH); // Pump OFF (HIGH = OFF)
     }
 
-    // Alarm niskiego poziomu wody
+    // Low water level alarm
     if (waterLevel < 630) {
       playMarioMelody();
     }
 
-    // LCD
+    // LCD display
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("T:");
@@ -133,11 +133,11 @@ void loop() {
     Serial.print("Temp: "); Serial.print(temperatureC); Serial.print(" C, ");
     Serial.print("Humidity: "); Serial.print(humidity); Serial.print(" %, ");
     Serial.print("Lux: "); Serial.print(lux); Serial.print(" lux, ");
-    Serial.print("Woda: "); Serial.print(waterLevel);
-    Serial.print(", Gleba analog: ");
+    Serial.print("Water: "); Serial.print(waterLevel);
+    Serial.print(", Soil analog: ");
     Serial.print(soilValue);
     Serial.print(" ("); Serial.print(soilPercent, 1); Serial.print("%), ");
-    Serial.print("Pompa: ");
+    Serial.print("Pump: ");
     Serial.println((soilPercent < 60.0 && waterLevel >= 630) ? "ON" : "OFF");
   }
 
